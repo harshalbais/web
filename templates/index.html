@@ -23,52 +23,50 @@
   <p id="aiResponse"></p>
 
   <script>
-  let recognition;
+    let recognition;
 
-  function startRecognition() {
-    const lang = document.getElementById("langSelect").value;
-    recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    recognition.lang = lang;
-    recognition.continuous = true;   // ✅ Keep listening
-    recognition.interimResults = false; 
-    recognition.start();
+    function startRecognition() {
+      const lang = document.getElementById("langSelect").value;
+      recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      recognition.lang = lang;
+      recognition.continuous = true;   // ✅ Keep listening
+      recognition.interimResults = false; 
+      recognition.start();
 
-    // 🛑 Stop AI voice immediately if user interrupts
- 
-    recognition.onresult = function(event) {
-  const lastResultIndex = event.results.length - 1;
-  const text = event.results[lastResultIndex][0].transcript;
+      recognition.onresult = function(event) {
+        const lastResultIndex = event.results.length - 1;
+        const text = event.results[lastResultIndex][0].transcript;
 
-  // 🛑 Stop AI voice immediately if user interrupts
-  if (speechSynthesis.speaking) {
-    speechSynthesis.cancel();
-  }
+        // 🛑 Stop AI voice immediately if user interrupts
+        if (speechSynthesis.speaking) {
+          speechSynthesis.cancel();
+        }
 
-  document.getElementById("userText").innerText = "👤 You: " + text;
-  sendToFlask(text, lang);
-};
+        document.getElementById("userText").innerText = "👤 You: " + text;
+        sendToFlask(text, lang);
+      };
 
+      recognition.onend = function() {
+        recognition.start(); // ✅ Restart listening automatically
+      };
+    }
 
-  function sendToFlask(text, lang) {
-    fetch("/chat", {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({ message: text, lang: lang })
-    })
-    .then(res => res.json())
-    .then(data => {
-      document.getElementById("aiResponse").innerText = "🤖 AI: " + data.reply;
+    function sendToFlask(text, lang) {
+      fetch("/chat", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ message: text, lang: lang })
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("aiResponse").innerText = "🤖 AI: " + data.reply;
 
-      // 🔊 Speak response
-      const utterance = new SpeechSynthesisUtterance(data.reply);
-      utterance.lang = data.lang;  
-      speechSynthesis.speak(utterance);
-    });
-  }
-</script>
-
+        // 🔊 Speak response
+        const utterance = new SpeechSynthesisUtterance(data.reply);
+        utterance.lang = data.lang;  
+        speechSynthesis.speak(utterance);
+      });
+    }
+  </script>
 </body>
 </html>
-
-
-
