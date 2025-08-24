@@ -23,35 +23,46 @@
   <p id="aiResponse"></p>
 
   <script>
-    function startRecognition() {
-      const lang = document.getElementById("langSelect").value;
-      const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-      recognition.lang = lang;
-      recognition.start();
+  let recognition;
 
-      recognition.onresult = function(event) {
-        const text = event.results[0][0].transcript;
-        document.getElementById("userText").innerText = "👤 You: " + text;
-        sendToFlask(text, lang);
-      };
-    }
+  function startRecognition() {
+    const lang = document.getElementById("langSelect").value;
+    recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = lang;
+    recognition.continuous = true;   // ✅ Keep listening
+    recognition.interimResults = false; 
+    recognition.start();
 
-    function sendToFlask(text, lang) {
-      fetch("/chat", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ message: text, lang: lang })
-      })
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById("aiResponse").innerText = "🤖 AI: " + data.reply;
+    recognition.onresult = function(event) {
+      const lastResultIndex = event.results.length - 1;
+      const text = event.results[lastResultIndex][0].transcript;
+      document.getElementById("userText").innerText = "👤 You: " + text;
+      sendToFlask(text, lang);
+    };
 
-        // 🔊 Speak response
-        const utterance = new SpeechSynthesisUtterance(data.reply);
-        utterance.lang = data.lang;  
-        speechSynthesis.speak(utterance);
-      });
-    }
-  </script>
+    recognition.onend = function() {
+      recognition.start();   // ✅ Restart automatically when it ends
+    };
+  }
+
+  function sendToFlask(text, lang) {
+    fetch("/chat", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ message: text, lang: lang })
+    })
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("aiResponse").innerText = "🤖 AI: " + data.reply;
+
+      // 🔊 Speak response
+      const utterance = new SpeechSynthesisUtterance(data.reply);
+      utterance.lang = data.lang;  
+      speechSynthesis.speak(utterance);
+    });
+  }
+</script>
+
 </body>
 </html>
+
