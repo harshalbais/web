@@ -17,7 +17,8 @@
   </select>
 
   <br><br>
-  <button onclick="startRecognition()">🎤 Speak</button>
+  <button onclick="startRecognition()">▶️ Start Listening</button>
+  <button onclick="stopRecognition()">⏹ Stop Listening</button>
 
   <p id="userText"></p>
   <p id="aiResponse"></p>
@@ -25,12 +26,32 @@
   <script>
     let recognition;
 
+    // Load voices and log them (for debugging)
+    speechSynthesis.onvoiceschanged = () => {
+      console.log("Available voices:", speechSynthesis.getVoices());
+    };
+
+    // 🔊 Speak helper with fallback
+    function speakText(text, lang) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = lang;
+
+      // Pick best matching voice, else fallback
+      let voices = speechSynthesis.getVoices();
+      let voice = voices.find(v => v.lang === lang);
+      if (voice) {
+        utterance.voice = voice;
+      }
+
+      speechSynthesis.speak(utterance);
+    }
+
     function startRecognition() {
       const lang = document.getElementById("langSelect").value;
       recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
       recognition.lang = lang;
-      recognition.continuous = true;   // ✅ Keep listening
-      recognition.interimResults = false; 
+      recognition.continuous = true;
+      recognition.interimResults = false;
       recognition.start();
 
       recognition.onresult = function(event) {
@@ -47,8 +68,14 @@
       };
 
       recognition.onend = function() {
-        recognition.start(); // ✅ Restart listening automatically
+        recognition.start(); // keep listening
       };
+    }
+
+    function stopRecognition() {
+      if (recognition) {
+        recognition.stop();
+      }
     }
 
     function sendToFlask(text, lang) {
@@ -62,9 +89,7 @@
         document.getElementById("aiResponse").innerText = "🤖 AI: " + data.reply;
 
         // 🔊 Speak response
-        const utterance = new SpeechSynthesisUtterance(data.reply);
-        utterance.lang = data.lang;  
-        speechSynthesis.speak(utterance);
+        speakText(data.reply, data.lang);
       });
     }
   </script>
