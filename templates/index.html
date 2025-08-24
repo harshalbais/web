@@ -33,6 +33,10 @@
     recognition.interimResults = false; 
     recognition.start();
 
+    // 🛑 Stop AI voice immediately if user interrupts
+  if (speechSynthesis.speaking) {
+    speechSynthesis.cancel();
+  }
     recognition.onresult = function(event) {
       const lastResultIndex = event.results.length - 1;
       const text = event.results[lastResultIndex][0].transcript;
@@ -65,4 +69,5 @@
 
 </body>
 </html>
+
 
