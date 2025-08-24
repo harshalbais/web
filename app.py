@@ -3,8 +3,8 @@ import google.generativeai as genai
 
 app = Flask(__name__)
 
-# 🔑 Configure Gemini
-genai.configure(api_key="AIzaSyCGIgXgAGunFMwLkNmtv6ny0xMJZJm73jA")
+# 🔑 Configure Gemini API
+genai.configure(api_key="YOUR_GEMINI_API_KEY")
 model = genai.GenerativeModel("gemini-1.5-flash")
 
 @app.route("/")
@@ -17,7 +17,7 @@ def chat():
     user_msg = data["message"]
     lang = data.get("lang", "en-US")  # default English
 
-    # 🤖 Send message to Gemini
+    # 🤖 Get response from Gemini
     response = model.generate_content(user_msg)
 
     return jsonify({"reply": response.text, "lang": lang})
