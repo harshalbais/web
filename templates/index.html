@@ -34,20 +34,20 @@
     recognition.start();
 
     // 🛑 Stop AI voice immediately if user interrupts
+ 
+    recognition.onresult = function(event) {
+  const lastResultIndex = event.results.length - 1;
+  const text = event.results[lastResultIndex][0].transcript;
+
+  // 🛑 Stop AI voice immediately if user interrupts
   if (speechSynthesis.speaking) {
     speechSynthesis.cancel();
   }
-    recognition.onresult = function(event) {
-      const lastResultIndex = event.results.length - 1;
-      const text = event.results[lastResultIndex][0].transcript;
-      document.getElementById("userText").innerText = "👤 You: " + text;
-      sendToFlask(text, lang);
-    };
 
-    recognition.onend = function() {
-      recognition.start();   // ✅ Restart automatically when it ends
-    };
-  }
+  document.getElementById("userText").innerText = "👤 You: " + text;
+  sendToFlask(text, lang);
+};
+
 
   function sendToFlask(text, lang) {
     fetch("/chat", {
@@ -69,5 +69,6 @@
 
 </body>
 </html>
+
 
 
