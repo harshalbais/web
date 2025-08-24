@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🌍 Multilingual AI Voice Assistant</title>
+</head>
+<body>
+  <h2>🎙️ Multilingual AI Voice Assistant</h2>
+
+  <label for="langSelect">Choose Language:</label>
+  <select id="langSelect">
+    <option value="en-US">English (US)</option>
+    <option value="hi-IN">Hindi</option>
+    <option value="mr-IN">Marathi</option>
+    <option value="fr-FR">French</option>
+    <option value="de-DE">German</option>
+  </select>
+
+  <br><br>
+  <button onclick="startRecognition()">🎤 Speak</button>
+
+  <p id="userText"></p>
+  <p id="aiResponse"></p>
+
+  <script>
+    function startRecognition() {
+      const lang = document.getElementById("langSelect").value;
+      const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      recognition.lang = lang;
+      recognition.start();
+
+      recognition.onresult = function(event) {
+        const text = event.results[0][0].transcript;
+        document.getElementById("userText").innerText = "👤 You: " + text;
+        sendToFlask(text, lang);
+      };
+    }
+
+    function sendToFlask(text, lang) {
+      fetch("/chat", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ message: text, lang: lang })
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("aiResponse").innerText = "🤖 AI: " + data.reply;
+
+        // 🔊 Speak response
+        const utterance = new SpeechSynthesisUtterance(data.reply);
+        utterance.lang = data.lang;  
+        speechSynthesis.speak(utterance);
+      });
+    }
+  </script>
+</body>
+</html>
