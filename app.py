@@ -5,7 +5,7 @@ from google.api_core.exceptions import ResourceExhausted
 app = Flask(__name__)
 
 # 🔑 Configure Gemini API
-API_KEY = "YOUR_GEMINI_API_KEY"
+API_KEY = "AIzaSyCtk0gj9WUC2JJYHOz9hcKXm7X2fH_QDNQ"
 if not API_KEY:
     raise RuntimeError("Missing Gemini API key.")
 
