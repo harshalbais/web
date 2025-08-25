@@ -171,11 +171,12 @@
         return;
       }
 
-      recognition.onstart = () => {
-        isRecognizing = true;
-        setButtons(true);
-        setStatus("listening", "Listening…");
-      };
+     recognition.onstart = () => {
+  isRecognizing = true; // <-- very important
+  setButtons(true);
+  setStatus("listening", "Listening…");
+};
+
 
       recognition.onresult = (event) => {
         const result = event.results[event.results.length - 1];
@@ -201,31 +202,25 @@
         }
       };
 
-      recognition.onend = () => {
-        isRecognizing = false;
-        setButtons(false);
+    recognition.onend = () => {
+  isRecognizing = false;
+  setButtons(false);
 
-        if (manuallyStopped) {
-          setStatus("stopped", "Stopped.");
-          return;
-        }
+  if (manuallyStopped) {
+    setStatus("stopped", "Stopped.");
+    return;
+  }
 
-        // Auto-reconnect with fresh instance after a small delay
-        setStatus("reconnecting", "Reconnecting…");
-        setTimeout(() => {
-          if (!manuallyStopped && !isRecognizing) {
-            startRecognition(); // create a new instance and start again
-          }
-        }, RESTART_DELAY_MS);
-      };
-
-      try {
-        recognition.start();
-      } catch (err) {
-        console.warn("Start error:", err);
-        setStatus("error", "Could not start listening.");
+  // ✅ Prevent infinite reconnect loop: only reconnect if it was actually listening before
+  if (isRecognizing === false) {
+    setStatus("reconnecting", "Reconnecting…");
+    setTimeout(() => {
+      if (!manuallyStopped && !isRecognizing) {
+        startRecognition(); // fresh instance
       }
-    }
+    }, RESTART_DELAY_MS);
+  }
+};
 
     function stopRecognition() {
       manuallyStopped = true;
@@ -271,3 +266,4 @@
   </script>
 </body>
 </html>
+
