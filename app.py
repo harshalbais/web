@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, render_template
 import google.generativeai as genai
 from google.api_core.exceptions import ResourceExhausted
-import os
+
 
 app = Flask(__name__)
 
@@ -74,4 +74,4 @@ def chat():
 
 if __name__ == "__main__":
     # In Render, gunicorn runs this, but local dev can run directly
-    app.run(host="0.0.0.0", port=10000, debug=True)
+    app.run( debug=True)
