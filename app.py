@@ -2,13 +2,12 @@ from flask import Flask, request, jsonify, render_template
 import google.generativeai as genai
 from google.api_core.exceptions import ResourceExhausted
 
-
 app = Flask(__name__)
 
-# 🔑 Configure Gemini API (supports multiple common env var names)
-API_KEY ='AIzaSyCtk0gj9WUC2JJYHOz9hcKXm7X2fH_QDNQ'
+# 🔑 Configure Gemini API
+API_KEY = "YOUR_GEMINI_API_KEY"
 if not API_KEY:
-    raise RuntimeError("Missing Gemini API key. Set GOOGLE_API_KEY or GEMINI_API_KEY or api_key.")
+    raise RuntimeError("Missing Gemini API key.")
 
 genai.configure(api_key=API_KEY)
 model = genai.GenerativeModel("gemini-1.5-flash")
@@ -56,14 +55,12 @@ def chat():
         ])
         reply = (resp.text or "").strip() or "Sorry, I couldn't generate a response."
     except ResourceExhausted:
-        # Graceful quota fallback
         reply = (
             "⚠️ I’ve reached my daily AI quota right now. "
             "Phir bhi main help kar sakta hoon: apne interest, budget aur duration batao; "
             "main suitable courses suggest karunga aur callback schedule kar dunga."
         )
     except Exception as e:
-        # Catch-all so the app never crashes
         print("Gemini error:", repr(e))
         reply = (
             "Oops, kuch technical issue aa gaya. "
@@ -73,5 +70,4 @@ def chat():
     return jsonify({"reply": reply, "lang": lang})
 
 if __name__ == "__main__":
-    # In Render, gunicorn runs this, but local dev can run directly
-    app.run( debug=True)
+    app.run(debug=True)
