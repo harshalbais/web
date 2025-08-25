@@ -6,11 +6,7 @@ import os
 app = Flask(__name__)
 
 # 🔑 Configure Gemini API (supports multiple common env var names)
-API_KEY = (
-    os.getenv("GOOGLE_API_KEY")
-    or os.getenv("GEMINI_API_KEY")
-    or os.getenv("api_key")
-)
+API_KEY ='AIzaSyCtk0gj9WUC2JJYHOz9hcKXm7X2fH_QDNQ'
 if not API_KEY:
     raise RuntimeError("Missing Gemini API key. Set GOOGLE_API_KEY or GEMINI_API_KEY or api_key.")
 
