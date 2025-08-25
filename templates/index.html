@@ -119,15 +119,26 @@
       };
 
       recognition.onend = () => {
-        isRecognizing = false;
-        statusEl.textContent = manuallyStopped ? "Stopped." : "Reconnecting…";
-        if (!manuallyStopped) {
-          try { recognition.start(); } catch {}
-        }
-      };
+  isRecognizing = false;
+  if (manuallyStopped) {
+    statusEl.textContent = "Stopped.";
+    return;
+  }
 
-      try { recognition.start(); } catch (e) { console.warn("Start error:", e); }
+  statusEl.textContent = "Reconnecting…";
+
+  // Restart after a small delay to avoid flicker
+  setTimeout(() => {
+    if (!manuallyStopped && !isRecognizing) {
+      try {
+        recognition.start();
+      } catch (e) {
+        console.warn("Restart error:", e);
+      }
     }
+  }, 800); // 800ms delay helps avoid flicker
+};
+
 
     function stopRecognition() {
       manuallyStopped = true;
@@ -165,3 +176,4 @@
   </script>
 </body>
 </html>
+
