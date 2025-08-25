@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, render_template
 import google.generativeai as genai
 from google.api_core.exceptions import ResourceExhausted
 
-app = Flask(_name_)
+app = Flask(__name__)
 
 # 🔑 Hardcode API Key directly (not using os.environ)
 API_KEY = "AIzaSyCtk0gj9WUC2JJYHOz9hcKXm7X2fH_QDNQ"   # <-- yaha apna Gemini API key daalo
@@ -59,5 +59,5 @@ def chat():
     return jsonify({"reply": reply, "lang": lang})
 
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     app.run( debug=True)
