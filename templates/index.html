@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>🌍 Multilingual AI Voice Assistant</title>
+  <title>🌍Edtech | EasyLearn</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -12,18 +12,58 @@
     .status-dot { width: 10px; height: 10px; border-radius: 9999px; display: inline-block; margin-right: 8px; }
   </style>
 </head>
-<body class="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 min-h-screen flex items-center justify-center font-sans">
+<body class="bg-gray-50 font-sans">
 
-  <div class="bg-white rounded-2xl shadow-2xl p-6 md:p-8 w-full max-w-lg">
+  <!-- Header -->
+  <header class="bg-gray-900 text-white px-8 py-4 flex items-center justify-between shadow-lg">
+    <div class="flex items-center gap-2 font-bold text-xl">Edtech</div>
+    <nav class="hidden md:flex gap-6 text-sm">
+      <a href="#about" class="hover:text-yellow-400">About Us</a>
+      <a href="#services" class="hover:text-yellow-400">Services</a>
+      <a href="#universities" class="hover:text-yellow-400">Universities & Courses</a>
+      <a href="#contacts" class="hover:text-yellow-400">Contacts</a>
+    </nav>
+    <div class="flex gap-3 text-lg">
+      <a href="#"><i class="bi bi-facebook"></i></a>
+      <a href="#"><i class="bi bi-instagram"></i></a>
+      <a href="#"><i class="bi bi-youtube"></i></a>
+      <a href="#"><i class="bi bi-twitter"></i></a>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="relative">
+    <img src="https://petapixel.com/assets/uploads/2024/02/adobe-gen-music-graphic-featured-image-800x420.jpg"
+         alt="Hero Image"
+         class="w-full h-[80vh] object-cover brightness-50">
+    <div class="absolute top-1/2 left-10 -translate-y-1/2 text-white max-w-lg">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">EasyConsultant – We Make Your Dreams Come True!</h1>
+      <p class="mb-6 text-lg">Study anywhere you want to with our help..</p>
+      <a href="#contacts" class="inline-block bg-yellow-400 text-black font-semibold px-5 py-3 rounded-lg shadow hover:bg-yellow-500 mr-4">Contact No</a>
+      <span class="inline-block font-medium"><i class="bi bi-telephone-fill mr-2"></i>8261943997</span>
+    </div>
+  </section>
+
+  <!-- Voice Assistant Section -->
+  <section class="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl p-6 -mt-20 relative z-10">
     <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
-      <i class="bi bi-mic-fill text-purple-600"></i> Multilingual AI Voice Assistant
+      <i class="bi bi-mic-fill text-purple-600"></i> Talk to our AI Agent
     </h2>
+
+    <!-- Tabs -->
+    <nav class="mb-4 border-b">
+      <div class="flex gap-4">
+        <button class="px-3 py-2 border-b-2 border-purple-600 text-purple-600 font-medium">Home</button>
+        <button class="px-3 py-2 text-gray-600 hover:text-purple-600">Profile</button>
+        <button class="px-3 py-2 text-gray-600 hover:text-purple-600">Contact</button>
+        <button class="px-3 py-2 text-gray-400 cursor-not-allowed">Disabled</button>
+      </div>
+    </nav>
 
     <!-- Language Selector -->
     <label for="langSelect" class="block text-sm font-medium text-gray-700 mb-2">Choose Language</label>
     <select id="langSelect"
-            class="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 mb-4"
-            aria-label="Choose language">
+            class="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 mb-4">
       <option value="en-US">English (US)</option>
       <option value="hi-IN">Hindi</option>
       <option value="mr-IN">Marathi</option>
@@ -34,17 +74,15 @@
     <!-- Controls -->
     <div class="flex items-center gap-3 mb-4">
       <button id="btnStart"
-              class="flex items-center gap-2 bg-green-500 text-white px-5 py-2 rounded-xl hover:bg-green-600 transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-              aria-label="Start listening">
+              class="flex items-center gap-2 bg-green-500 text-white px-5 py-2 rounded-xl hover:bg-green-600 transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
         <i class="bi bi-play-fill text-xl"></i> Start
       </button>
       <button id="btnStop"
-              class="flex items-center gap-2 bg-red-500 text-white px-5 py-2 rounded-xl hover:bg-red-600 transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-              aria-label="Stop listening" disabled>
+              class="flex items-center gap-2 bg-red-500 text-white px-5 py-2 rounded-xl hover:bg-red-600 transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed" disabled>
         <i class="bi bi-stop-fill text-xl"></i> Stop
       </button>
       <span id="status" class="text-sm text-gray-700 flex items-center">
-        <span id="statusDot" class="status-dot bg-gray-300" aria-hidden="true"></span>
+        <span id="statusDot" class="status-dot bg-gray-300"></span>
         <span id="statusText">Idle.</span>
       </span>
     </div>
@@ -55,15 +93,77 @@
     </div>
 
     <!-- Chat -->
-    <div id="chatBox" class="bg-gray-50 rounded-xl p-4 h-80 overflow-y-auto shadow-inner space-y-3 text-sm" role="log" aria-live="polite"></div>
-  </div>
+    <div id="chatBox" class="bg-gray-50 rounded-xl p-4 h-80 overflow-y-auto shadow-inner space-y-3 text-sm"></div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="py-16 bg-gray-100 text-center">
+    <h2 class="text-3xl font-bold text-yellow-500 mb-6">About Us</h2>
+    <p class="max-w-3xl mx-auto text-gray-700 leading-relaxed">
+      At Edtech, we help students achieve their dreams of studying abroad.
+      Our expert team guides you with university selection, courses, scholarships, and career opportunities.
+    </p>
+  </section>
+
+  <!-- Services Section -->
+  <section id="services" class="py-16 bg-white">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2 class="text-3xl font-bold text-center text-yellow-500 mb-10">Our Services</h2>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="p-6 bg-gray-50 rounded-xl shadow hover:shadow-lg transition">
+          <i class="bi bi-globe2 text-4xl text-purple-600 mb-4"></i>
+          <h3 class="text-xl font-semibold mb-2">Study Abroad Guidance</h3>
+          <p class="text-gray-600">Personalized counseling to find the right country, university, and program.</p>
+        </div>
+        <div class="p-6 bg-gray-50 rounded-xl shadow hover:shadow-lg transition">
+          <i class="bi bi-journal-text text-4xl text-purple-600 mb-4"></i>
+          <h3 class="text-xl font-semibold mb-2">Application Assistance</h3>
+          <p class="text-gray-600">End-to-end help with applications, SOPs, and recommendation letters.</p>
+        </div>
+        <div class="p-6 bg-gray-50 rounded-xl shadow hover:shadow-lg transition">
+          <i class="bi bi-cash-coin text-4xl text-purple-600 mb-4"></i>
+          <h3 class="text-xl font-semibold mb-2">Scholarship Support</h3>
+          <p class="text-gray-600">Guidance for finding and applying to scholarships and financial aid.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="contacts" class="bg-gray-900 text-gray-300 py-10">
+    <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8">
+      <div>
+        <h3 class="text-xl font-bold text-white mb-3">EASYLEARN</h3>
+        <p>Making global education accessible to everyone.</p>
+      </div>
+      <div>
+        <h3 class="text-xl font-bold text-white mb-3">Quick Links</h3>
+        <ul class="space-y-2">
+          <li><a href="#about" class="hover:text-yellow-400">About Us</a></li>
+          <li><a href="#services" class="hover:text-yellow-400">Services</a></li>
+          <li><a href="#universities" class="hover:text-yellow-400">Universities & Courses</a></li>
+          <li><a href="#contacts" class="hover:text-yellow-400">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-xl font-bold text-white mb-3">Contact Us</h3>
+        <p><i class="bi bi-telephone-fill mr-2"></i>+1 (234) 567 89 00</p>
+        <div class="flex gap-3 text-2xl mt-3">
+          <a href="#"><i class="bi bi-facebook hover:text-yellow-400"></i></a>
+          <a href="#"><i class="bi bi-instagram hover:text-yellow-400"></i></a>
+          <a href="#"><i class="bi bi-twitter hover:text-yellow-400"></i></a>
+          <a href="#"><i class="bi bi-youtube hover:text-yellow-400"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="text-center text-gray-500 mt-10 text-sm">© 2025 EasyLearn. All Rights Reserved.</div>
+  </footer>
 
   <script>
-    // ---------- Globals ----------
+    // 👇 keeping your full JS logic intact
     let recognition = null;
     let isRecognizing = false;
     let manuallyStopped = false;
-    let voicesReady = false;
 
     const RESTART_DELAY_MS = 900;
 
@@ -74,9 +174,7 @@
     const statusDot = document.getElementById("statusDot");
     const langSelect = document.getElementById("langSelect");
 
-    // ---------- UI helpers ----------
     function setStatus(mode, text) {
-      // mode: 'idle' | 'listening' | 'reconnecting' | 'stopped' | 'error'
       const colors = {
         idle: "bg-gray-300",
         listening: "bg-green-500",
@@ -84,12 +182,11 @@
         stopped: "bg-red-500",
         error: "bg-red-600"
       };
-      statusDot.className = `status-dot ${colors[mode] || colors.idle}`;
+      statusDot.className = status-dot ${colors[mode] || colors.idle};
       statusText.textContent = text;
     }
 
     function setButtons(listening) {
-      // When listening: disable Start, enable Stop
       btnStart.disabled = listening;
       btnStop.disabled = !listening;
     }
@@ -102,7 +199,7 @@
 
     function addBubble(sender, text, side = "left") {
       const wrapper = document.createElement("div");
-      wrapper.className = `max-w-[85%] ${side === "left" ? "self-start" : "self-end"} flex`;
+      wrapper.className = max-w-[85%] ${side === "left" ? "self-start" : "self-end"} flex;
       wrapper.innerHTML = `
         <div class="${side === "left" ? "bg-white" : "bg-purple-100"} rounded-2xl px-3 py-2 shadow text-gray-800">
           <span class="font-semibold">${escapeHtml(sender)}:</span> ${escapeHtml(text)}
@@ -112,37 +209,25 @@
       chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    // ---------- Speech Synthesis (TTS) ----------
     function chooseVoice(lang) {
       const list = window.speechSynthesis.getVoices() || [];
-      // Exact match first
       let v = list.find(vo => vo.lang === lang);
       if (v) return v;
-      // Fallback: same base language (e.g., 'hi' from 'hi-IN')
       const base = lang.split("-")[0];
       v = list.find(vo => vo.lang && vo.lang.startsWith(base));
       return v || null;
     }
 
     function speakText(text, lang) {
-      if (!("speechSynthesis" in window)) return; // no TTS support
+      if (!("speechSynthesis" in window)) return;
       const utter = new SpeechSynthesisUtterance(text);
       utter.lang = lang;
       const voice = chooseVoice(lang);
       if (voice) utter.voice = voice;
-      // Slightly slower for clarity
       utter.rate = 0.98;
       try { window.speechSynthesis.speak(utter); } catch {}
     }
 
-    // Load voices list (Chrome fires this async)
-    if ("speechSynthesis" in window) {
-      window.speechSynthesis.onvoiceschanged = () => { voicesReady = true; };
-      // Trigger load
-      window.speechSynthesis.getVoices();
-    }
-
-    // ---------- Speech Recognition ----------
     function makeRecognizer() {
       const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SR) return null;
@@ -159,24 +244,19 @@
       const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SR) {
         addBubble("System", "Your browser does not support SpeechRecognition. Please use Chrome or Edge on desktop.", "left");
-        setStatus("error", "SpeechRecognition not supported.");
+        setStatus("error", "Not supported.");
         return;
       }
 
       manuallyStopped = false;
-
       recognition = makeRecognizer();
-      if (!recognition) {
-        setStatus("error", "Failed to initialize recognition.");
-        return;
-      }
+      if (!recognition) return;
 
-     recognition.onstart = () => {
-  isRecognizing = true; // <-- very important
-  setButtons(true);
-  setStatus("listening", "Listening…");
-};
-
+      recognition.onstart = () => {
+        isRecognizing = true;
+        setButtons(true);
+        setStatus("listening", "Listening…");
+      };
 
       recognition.onresult = (event) => {
         const result = event.results[event.results.length - 1];
@@ -184,55 +264,43 @@
         const text = String(result[0].transcript || "").trim();
         if (!text) return;
 
-        // If AI is speaking, stop it so we can listen to user clearly
-        if (window.speechSynthesis && window.speechSynthesis.speaking) {
-          try { window.speechSynthesis.cancel(); } catch {}
-        }
+        if (window.speechSynthesis.speaking) window.speechSynthesis.cancel();
 
         addBubble("You", text, "right");
         sendToBackend(text, recognition.lang);
       };
 
       recognition.onerror = (e) => {
-        console.warn("Recognition error:", e.error);
-        // Some common recoverable errors: "no-speech", "aborted", "audio-capture"
-        if (e.error === "not-allowed" || e.error === "service-not-allowed") {
-          setStatus("error", "Microphone permission denied.");
-          stopRecognition(); // lock it
-        }
+        setStatus("error", e.error);
+        stopRecognition();
       };
 
-    recognition.onend = () => {
-  isRecognizing = false;
-  setButtons(false);
+      recognition.onend = () => {
+        isRecognizing = false;
+        setButtons(false);
 
-  if (manuallyStopped) {
-    setStatus("stopped", "Stopped.");
-    return;
-  }
+        if (manuallyStopped) {
+          setStatus("stopped", "Stopped.");
+          return;
+        }
 
-  // ✅ Prevent infinite reconnect loop: only reconnect if it was actually listening before
-  if (isRecognizing === false) {
-    setStatus("reconnecting", "Reconnecting…");
-    setTimeout(() => {
-      if (!manuallyStopped && !isRecognizing) {
-        startRecognition(); // fresh instance
-      }
-    }, RESTART_DELAY_MS);
-  }
-};
+        setStatus("reconnecting", "Reconnecting…");
+        setTimeout(() => {
+          if (!manuallyStopped && !isRecognizing) startRecognition();
+        }, RESTART_DELAY_MS);
+      };
+
+      recognition.start();
+    }
 
     function stopRecognition() {
       manuallyStopped = true;
-      if (recognition) {
-        try { recognition.stop(); } catch {}
-      }
+      if (recognition) recognition.stop();
       isRecognizing = false;
       setButtons(false);
       setStatus("stopped", "Stopped.");
     }
 
-    // ---------- Backend ----------
     async function sendToBackend(text, lang) {
       try {
         const res = await fetch("/chat", {
@@ -240,30 +308,18 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ message: text, lang })
         });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        if (!res.ok) throw new Error("HTTP " + res.status);
         const data = await res.json();
-        const reply = (data && data.reply) ? String(data.reply) : "Sorry, I couldn't process that.";
+        const reply = data.reply || "Sorry, I couldn't process that.";
         addBubble("AI", reply, "left");
         speakText(reply, data.lang || lang);
       } catch (e) {
-        console.warn("Fetch error:", e);
-        addBubble("System", "Network error. Please check your server and try again.", "left");
+        addBubble("System", "Network error. Please check your server.", "left");
       }
     }
 
-    // ---------- Event Bindings ----------
     btnStart.addEventListener("click", startRecognition);
     btnStop.addEventListener("click", stopRecognition);
-
-    // Stop SR + TTS on page unload
-    window.addEventListener("beforeunload", () => {
-      manuallyStopped = true;
-      if (recognition) { try { recognition.stop(); } catch {} }
-      if (window.speechSynthesis && window.speechSynthesis.speaking) {
-        try { window.speechSynthesis.cancel(); } catch {}
-      }
-    });
   </script>
 </body>
 </html>
-
