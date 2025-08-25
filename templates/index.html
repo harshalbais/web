@@ -68,7 +68,7 @@
       chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    // Escape HTML to avoid injection in bubbles
+    // Escape HTML
     function escapeHtml(str) {
       return String(str).replace(/[&<>"']/g, s => ({
         "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
@@ -79,28 +79,22 @@
     function speakText(text, lang) {
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = lang;
-
       const voices = speechSynthesis.getVoices();
       const exact = voices.find(v => v.lang === lang);
       const loose = voices.find(v => v.lang.startsWith(lang.split("-")[0]));
       utterance.voice = exact || loose || null;
-
-      // Lower rate slightly for clarity
       utterance.rate = 0.98;
-
       speechSynthesis.speak(utterance);
     }
 
     // Start speech recognition
     function startRecognition() {
       if (isRecognizing) return;
-
       const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SR) {
         addBubble("System", "Your browser does not support SpeechRecognition. Please use Chrome or Edge.", "left");
         return;
       }
-
       manuallyStopped = false;
       recognition = new SR();
       recognition.lang = langSelect.value;
@@ -115,33 +109,24 @@
       recognition.onresult = (event) => {
         const text = event.results[event.results.length - 1][0].transcript.trim();
         if (!text) return;
-
-        // If AI is speaking, stop it so we can listen to user
         if (speechSynthesis.speaking) speechSynthesis.cancel();
-
         addBubble("You", text, "right");
         sendToBackend(text, recognition.lang);
       };
 
       recognition.onerror = (e) => {
         console.warn("Recognition error:", e.error);
-        // Common recoverable errors can be ignored; UI continues.
       };
 
       recognition.onend = () => {
         isRecognizing = false;
         statusEl.textContent = manuallyStopped ? "Stopped." : "Reconnecting…";
-        // Auto-restart only if user didn't press Stop
         if (!manuallyStopped) {
           try { recognition.start(); } catch {}
         }
       };
 
-      try {
-        recognition.start();
-      } catch (e) {
-        console.warn("Start error:", e);
-      }
+      try { recognition.start(); } catch (e) { console.warn("Start error:", e); }
     }
 
     function stopRecognition() {
@@ -170,16 +155,8 @@
       }
     }
 
-    // Buttons
     btnStart.addEventListener("click", startRecognition);
     btnStop.addEventListener("click", stopRecognition);
-
-    // Log voices (optional)
-    speechSynthesis.onvoiceschanged = () => {
-      // console.log("Voices:", speechSynthesis.getVoices());
-    };
-
-    // Stop recognition when leaving the page
     window.addEventListener("beforeunload", () => {
       manuallyStopped = true;
       if (recognition) try { recognition.stop(); } catch {}
