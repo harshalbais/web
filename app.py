@@ -1,11 +1,20 @@
 from flask import Flask, request, jsonify, render_template
 import google.generativeai as genai
+from google.api_core.exceptions import ResourceExhausted
 import os
 
 app = Flask(__name__)
 
-# 🔑 Configure Gemini API
-genai.configure(api_key=os.getenv("api_key"))
+# 🔑 Configure Gemini API (supports multiple common env var names)
+API_KEY = (
+    os.getenv("GOOGLE_API_KEY")
+    or os.getenv("GEMINI_API_KEY")
+    or os.getenv("api_key")
+)
+if not API_KEY:
+    raise RuntimeError("Missing Gemini API key. Set GOOGLE_API_KEY or GEMINI_API_KEY or api_key.")
+
+genai.configure(api_key=API_KEY)
 model = genai.GenerativeModel("gemini-1.5-flash")
 
 # 🎙️ System prompt for EdTech Voice Agent
@@ -13,49 +22,60 @@ SYSTEM_PROMPT = """
 You are an AI Voice Course Consultant for an EdTech platform.
 Your job is to guide students in choosing the right courses, just like a professional human consultant.
 
-✅ Responsibilities:
-1. Provide Course Information
-   - Explain syllabus, fees, duration, eligibility, certifications, and placement support.
-   - Use simple, student-friendly language.
-2. Personalized Guidance
-   - Ask students about their background, career goals, and learning interests.
-   - Suggest courses tailored to their needs.
-3. Callback Option
-   - If students need more help, offer to schedule a callback with a human consultant.
-4. Conversation Style
-   - Speak naturally in English + Hindi mix with a clear Indian accent.
-   - Be polite, empathetic, and encouraging.
-   - Handle interruptions gracefully → pause when the student talks, then adapt your response.
-   - Keep answers short (2–4 sentences at a time, like real conversation).
-5. Fallback Behavior
-   - If you don’t know something, say: “I don’t have exact details on that right now, but I can connect you with a human consultant.”
+Responsibilities:
+1) Provide Course Information (syllabus, fees, duration, eligibility, certifications, placement support) in simple language.
+2) Personalized Guidance: ask background, goals, interests; suggest tailored courses.
+3) Callback Option: offer to schedule a callback with a human consultant if needed.
+4) Conversation Style: natural English + Hindi mix (clear Indian accent); polite, empathetic.
+   Handle interruptions gracefully; keep replies short (2–4 sentences).
+5) Fallback: if unsure, say you can connect to a human consultant.
 
-✅ Example Behaviors:
-- Greeting:
-  “Hi! 👋 I’m your course consultant. Aap kis field mein interested ho — technology, management, ya creative studies?”
-- Recommendation:
-  “Based on your interest in Data Science, I suggest our 6-month Data Analytics course. इसमें Python, Machine Learning basics, और Tableau cover किया जाता है. Fees around ₹45,000 hai, with placement support included.”
-- Callback:
-  “Would you like me to schedule a quick callback with our human consultant for more details?”
+Example Behaviors:
+- Greeting: "Hi! 👋 I’m your course consultant. Aap kis field mein interested ho — technology, management, ya creative studies?"
+- Recommendation: "Data Science interest ke basis par, main 6-month Data Analytics course suggest karta hoon. Isme Python, ML basics aur Tableau cover hota hai. Fees ~₹45,000 with placement support."
+- Callback: "Kya aap quick callback schedule karna chahenge human consultant ke saath?"
 """
 
 @app.route("/")
 def home():
     return render_template("index.html")
 
+@app.route("/healthz")
+def healthz():
+    return "ok", 200
+
 @app.route("/chat", methods=["POST"])
 def chat():
-    data = request.json
-    user_msg = data.get("message", "")
-    lang = data.get("lang", "en-US")  # default English
+    data = request.get_json(silent=True) or {}
+    user_msg = data.get("message", "").strip()
+    lang = data.get("lang", "en-US")
 
-    # 🤖 Combine system prompt + user message
-    response = model.generate_content([
-        {"role": "system", "parts": [SYSTEM_PROMPT]},
-        {"role": "user", "parts": [user_msg]}
-    ])
+    if not user_msg:
+        return jsonify({"reply": "Please say something to begin. 🙂", "lang": lang})
 
-    return jsonify({"reply": response.text, "lang": lang})
+    try:
+        resp = model.generate_content([
+            {"role": "system", "parts": [SYSTEM_PROMPT]},
+            {"role": "user", "parts": [user_msg]}
+        ])
+        reply = (resp.text or "").strip() or "Sorry, I couldn't generate a response."
+    except ResourceExhausted:
+        # Graceful quota fallback
+        reply = (
+            "⚠️ I’ve reached my daily AI quota right now. "
+            "Phir bhi main help kar sakta hoon: apne interest, budget aur duration batao; "
+            "main suitable courses suggest karunga aur callback schedule kar dunga."
+        )
+    except Exception as e:
+        # Catch-all so the app never crashes
+        print("Gemini error:", repr(e))
+        reply = (
+            "Oops, kuch technical issue aa gaya. "
+            "Please try again, ya main aapko human consultant se connect kara deta hoon."
+        )
+
+    return jsonify({"reply": reply, "lang": lang})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # In Render, gunicorn runs this, but local dev can run directly
+    app.run(host="0.0.0.0", port=10000, debug=True)
